@@ -1275,6 +1275,27 @@
         <frontend-maven-plugin.version>0.0.22</frontend-maven-plugin.version>
       </properties>
     </profile>
+      <profile>
+        <id>cdh</id>
+        <activation>
+          <activeByDefault>false</activeByDefault>
+        </activation>
+        <properties>
+          <hadoop.version>2.6.0-cdh5.5.0</hadoop.version>
+        </properties>
+        <pluginRepositories>
+          <pluginRepository>
+            <id>cloudera</id>
+            <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
+          </pluginRepository>
+        </pluginRepositories>
+        <repositories>
+          <repository>
+            <id>cloudera</id>
+            <url>https://repository.cloudera.com/artifactory/cloudera-repos/</url>
+          </repository>
+        </repositories>
+      </profile>
   </profiles>
 
   <reporting>
