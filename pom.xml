@@ -19,7 +19,7 @@
   <groupId>org.apache.tez</groupId>
   <artifactId>tez</artifactId>
   <packaging>pom</packaging>
-  <version>0.8.3</version>
+  <version>0.8.3-criteo</version>
   <name>tez</name>
 
   <licenses>
@@ -51,6 +51,13 @@
     <distMgmtStagingUrl>https://repository.apache.org/service/local/staging/deploy/maven2</distMgmtStagingUrl>
     <failIfNoTests>false</failIfNoTests>
     <protobuf.version>2.5.0</protobuf.version>
+    <!-- References the exe artifact version. We use build2 build because our build slave
+          are using a old GlibC version.
+         'build2' suffix should be removed as soon as our build slave are upgraded to
+         CentOS 7 or greater.
+         See https://github.com/google/protobuf/issues/781 for details
+    -->
+    <protobuf.exe.version>2.6.1-build2</protobuf.exe.version>
     <protoc.path>${env.PROTOC_PATH}</protoc.path>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <scm.url>scm:git:https://git-wip-us.apache.org/repos/asf/tez.git</scm.url>
@@ -58,6 +65,7 @@
     <frontend-maven-plugin.version>0.0.23</frontend-maven-plugin.version>
     <findbugs-maven-plugin.version>3.0.1</findbugs-maven-plugin.version>
     <javadoc-maven-plugin.version>2.9.1</javadoc-maven-plugin.version>
+    <maven-protoc-plugin.version>0.4.3</maven-protoc-plugin.version>
   </properties>
   <scm>
     <connection>${scm.url}</connection>
@@ -717,7 +725,23 @@
 
   <build>
     <pluginManagement>
-      <plugins>
+        <plugins>
+         <plugin>
+          <groupId>com.google.protobuf.tools</groupId>
+          <artifactId>maven-protoc-plugin</artifactId>
+          <version>${maven-protoc-plugin.version}</version>
+          <extensions>true</extensions>
+          <executions>
+          <execution>
+            <goals>
+              <goal>compile</goal>
+            </goals>
+            <configuration>
+              <protocArtifact>com.google.protobuf:protoc:${protobuf.exe.version}:exe:${os.detected.classifier}</protocArtifact>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
         <plugin>
           <groupId>org.apache.maven.plugins</groupId>
           <artifactId>maven-compiler-plugin</artifactId>
