@@ -467,5 +467,16 @@ public class JobContextImpl implements JobContext {
   public Progressable getProgressible() {
     return progress;
   }
+
+  /**
+   * Get the boolean value for the property that specifies which classpath
+   * takes precedence when tasks are launched. True - user's classes takes
+   * precedence. False - system's classes takes precedence.
+   * @return true if user's classes should take precedence
+   */
+   @Override
+  public boolean userClassesTakesPrecedence() {
+    return getJobConf().getBoolean(MRJobConfig.MAPREDUCE_JOB_USER_CLASSPATH_FIRST, false);
+  }
   
 }
