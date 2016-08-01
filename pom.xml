@@ -50,14 +50,17 @@
     <distMgmtStagingName>Apache Release Distribution Repository</distMgmtStagingName>
     <distMgmtStagingUrl>https://repository.apache.org/service/local/staging/deploy/maven2</distMgmtStagingUrl>
     <failIfNoTests>false</failIfNoTests>
-    <protobuf.version>2.5.0</protobuf.version>
-    <protoc.path>${env.PROTOC_PATH}</protoc.path>
+    <protobuf.version>2.6.1</protobuf.version>
+    <protobuf.bin.version>2.6.1-build2</protobuf.bin.version>
+    <protoc.path>${env.PROTOC_PATH}/protoc</protoc.path>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <scm.url>scm:git:https://git-wip-us.apache.org/repos/asf/tez.git</scm.url>
     <build.time>${maven.build.timestamp}</build.time>
     <frontend-maven-plugin.version>0.0.23</frontend-maven-plugin.version>
     <findbugs-maven-plugin.version>3.0.1</findbugs-maven-plugin.version>
     <javadoc-maven-plugin.version>2.9.1</javadoc-maven-plugin.version>
+    <maven-dependency-plugin.version>2.10</maven-dependency-plugin.version>
+    <os-maven-plugin.version>1.5.0.Final</os-maven-plugin.version>
   </properties>
   <scm>
     <connection>${scm.url}</connection>
@@ -950,7 +953,35 @@
       </plugins>
     </pluginManagement>
 
+    <extensions>
+      <extension>
+        <groupId>kr.motd.maven</groupId>
+        <artifactId>os-maven-plugin</artifactId>
+        <version>${os-maven-plugin.version}</version>
+      </extension>
+    </extensions>
+
     <plugins>
+      <!-- copy protoc binary -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <version>${maven-dependency-plugin.version}</version>
+        <configuration>
+          <artifactItems>
+            <artifactItem>
+              <groupId>com.google.protobuf</groupId>
+              <artifactId>protoc</artifactId>
+              <version>${protobuf.bin.version}</version>
+              <classifier>${os.detected.classifier}</classifier>
+              <type>exe</type>
+              <overWrite>true</overWrite>
+              <outputDirectory>${env.PROTOC_PATH}</outputDirectory>
+              <destFileName>protoc</destFileName>
+            </artifactItem>
+          </artifactItems>
+        </configuration>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
